@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:masterbank/database/app_database.dart';
 import 'package:masterbank/models/contact.dart';
 
 class ContactsForm extends StatefulWidget {
@@ -45,7 +46,7 @@ class _ContactsFormState extends State<ContactsForm> {
                     final int? accountNumber = int.tryParse(_accountNumberController.text);
 
                     final Contact newContact = Contact(0, accountName, accountNumber!);
-                    Navigator.pop(context, newContact);
+                    save(newContact).then((id) => Navigator.pop(context));
                   },
                 ),
               ),

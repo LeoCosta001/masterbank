@@ -4,7 +4,12 @@ import 'package:masterbank/database/app_database.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/screens/contacts_form.dart';
 
-class ContactsList extends StatelessWidget {
+class ContactsList extends StatefulWidget {
+  @override
+  State<ContactsList> createState() => _ContactsListState();
+}
+
+class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +25,7 @@ class ContactsList extends StatelessWidget {
               break;
             case ConnectionState.waiting:
               return Center(
-                      child: Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -118,8 +123,13 @@ class ContactsList extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => ContactsForm()))
-              .then((newContact) => debugPrint(newContact.toString()));
+              .push(MaterialPageRoute(
+            builder: (context) => ContactsForm(),
+          ))
+              .then((value) {
+            /// Atualiza a lista novamente quando o usuário retornar da página seguinte
+            setState(() {});
+          });
         },
         child: const Icon(Icons.add),
       ),
