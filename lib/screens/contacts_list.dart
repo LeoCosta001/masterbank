@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:masterbank/database/app_database.dart';
+import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/screens/contacts_form.dart';
 
 class ContactsList extends StatelessWidget {
@@ -8,21 +10,18 @@ class ContactsList extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Contacts'),
       ),
-      body: ListView(
-        children: const <Widget>[
-          Card(
-            child: ListTile(
-              title: Text(
-                'Fulano da Silva',
-                style: TextStyle(fontSize: 24.0),
-              ),
-              subtitle: Text(
-                '10524-1',
-                style: TextStyle(fontSize: 16.0),
-              ),
-            ),
-          ),
-        ],
+      body: FutureBuilder(
+        future: findAll(),
+        builder: (context, snapshot) {
+          final List<Contact> contactList = snapshot.data as List<Contact>;
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final Contact contact = contactList[index];
+              return _ContactItem(contact);
+            },
+            itemCount: contactList.length,
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -31,6 +30,28 @@ class ContactsList extends StatelessWidget {
               .then((newContact) => debugPrint(newContact.toString()));
         },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class _ContactItem extends StatelessWidget {
+  final Contact contact;
+
+  const _ContactItem(this.contact);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(
+          contact.accountName,
+          style: TextStyle(fontSize: 24.0),
+        ),
+        subtitle: Text(
+          contact.accountNumber.toString(),
+          style: TextStyle(fontSize: 16.0),
+        ),
       ),
     );
   }
