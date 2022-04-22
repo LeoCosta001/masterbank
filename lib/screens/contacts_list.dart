@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:masterbank/database/app_database.dart';
 import 'package:masterbank/database/dao/contact_dao.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/screens/contacts_form.dart';
@@ -151,11 +149,11 @@ class _ContactItem extends StatelessWidget {
       child: ListTile(
         title: Text(
           contact.accountName,
-          style: TextStyle(fontSize: 24.0),
+          style: const TextStyle(fontSize: 24.0),
         ),
         subtitle: Text(
           contact.accountNumber.toString(),
-          style: TextStyle(fontSize: 16.0),
+          style: const TextStyle(fontSize: 16.0),
         ),
       ),
     );

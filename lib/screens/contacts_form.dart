@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:masterbank/database/app_database.dart';
 import 'package:masterbank/database/dao/contact_dao.dart';
 import 'package:masterbank/models/contact.dart';
 
