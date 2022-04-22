@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:masterbank/database/app_database.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/screens/contacts_form.dart';
@@ -10,19 +11,110 @@ class ContactsList extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Contacts'),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Contact>>(
+        initialData: const [],
         future: findAll(),
         builder: (context, snapshot) {
-          final List<Contact> contactList = snapshot.data as List<Contact>;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              final Contact contact = contactList[index];
-              return _ContactItem(contact);
-            },
-            itemCount: contactList.length,
-          );
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Center(
+                      child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const CircularProgressIndicator(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Text(
+                        'Loading...',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              if (snapshot.data != null) {
+                final List<Contact> contactList = snapshot.data as List<Contact>;
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    final Contact contact = contactList[index];
+                    return _ContactItem(contact);
+                  },
+                  itemCount: contactList.length,
+                );
+              }
+              return const Text('Unknown error!');
+          }
+          return Container();
         },
       ),
+
+      /// Exibe uma lista vazia durante a requisição
+      /// OBS: Está comentado por que nesta situação não está sendo tratado os status da requisição devidamente
+      // body: FutureBuilder<List<Contact>>(
+      //   initialData: const [],
+      //   future: findAll(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.data != null) {
+      //       final List<Contact> contactList = snapshot.data as List<Contact>;
+      //       return ListView.builder(
+      //         itemBuilder: (context, index) {
+      //           final Contact contact = contactList[index];
+      //           return _ContactItem(contact);
+      //         },
+      //         itemCount: contactList.length,
+      //       );
+      //     }
+      //     return Container();
+      //   },
+      // ),
+
+      /// Exibe um "Loading" enquanto o valor do "snapshot.data" for "null".
+      /// OBS: Está comentado por que nesta situação não é muito viavel tendo em vista que a lista carrega osdados rapido já que a lista é pequena e carregada a partir de um DB local.
+      /// Para que um erro não seja exibido durante a requisição foi adicionado um valor inicial sendo uma lista vazia.
+      // body: FutureBuilder<List<Contact>>(
+      //   future: Future.delayed(const Duration(seconds: 1)).then((value) => findAll()),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.data != null) {
+      //       final List<Contact> contactList = snapshot.data as List<Contact>;
+      //       return ListView.builder(
+      //         itemBuilder: (context, index) {
+      //           final Contact contact = contactList[index];
+      //           return _ContactItem(contact);
+      //         },
+      //         itemCount: contactList.length,
+      //       );
+      //     }
+      //     // Exibe um "Loading" enquanto o valor do "snapshot.data" for "null"
+      //     return Center(
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.center,
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: <Widget>[
+      //           const CircularProgressIndicator(),
+      //           Padding(
+      //             padding: const EdgeInsets.only(top: 16.0),
+      //             child: Text(
+      //               'Loading...',
+      //               style: TextStyle(
+      //                 fontSize: 24.0,
+      //                 color: Theme.of(context).primaryColor,
+      //               ),
+      //             ),
+      //           )
+      //         ],
+      //       ),
+      //     );
+      //   },
+      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
