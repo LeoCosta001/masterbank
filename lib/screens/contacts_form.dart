@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:masterbank/models/contact.dart';
 
-class ContactsForm extends StatelessWidget {
+class ContactsForm extends StatefulWidget {
+  @override
+  State<ContactsForm> createState() => _ContactsFormState();
+}
+
+class _ContactsFormState extends State<ContactsForm> {
+  final TextEditingController _accountNameController = TextEditingController();
+  final TextEditingController _accountNumberController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,15 +20,17 @@ class ContactsForm extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            const TextField(
-              decoration: InputDecoration(labelText: 'Full name'),
-              style: TextStyle(fontSize: 24.0),
+            TextField(
+              controller: _accountNameController,
+              decoration: const InputDecoration(labelText: 'Full name'),
+              style: const TextStyle(fontSize: 24.0),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 8.0),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
               child: TextField(
-                decoration: InputDecoration(labelText: 'Account number'),
-                style: TextStyle(fontSize: 24.0),
+                controller: _accountNumberController,
+                decoration: const InputDecoration(labelText: 'Account number'),
+                style: const TextStyle(fontSize: 24.0),
                 keyboardType: TextInputType.number,
               ),
             ),
@@ -29,7 +40,13 @@ class ContactsForm extends StatelessWidget {
                 width: double.maxFinite,
                 child: ElevatedButton(
                   child: const Text('Create'),
-                  onPressed: () {},
+                  onPressed: () {
+                    final String accountName = _accountNameController.text;
+                    final int? accountNumber = int.tryParse(_accountNumberController.text);
+
+                    final Contact newContact = Contact(accountName, accountNumber!);
+                    Navigator.pop(context, newContact);
+                  },
                 ),
               ),
             ),
