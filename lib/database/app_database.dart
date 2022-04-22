@@ -18,7 +18,10 @@ Future<Database> createDatabase() {
             'account_number INTEGER)')
       },
       // Definindo a versão do banco de dados local
-      version: 1,
+      /// Para limpar a database atual basta seguir os seguintes passos:
+      /// Incluir a propriedade "onDowngrade" > Colocar uma nova versão > Executar o aplicativo > Reduzir o numero da versão > Executar o aplicativo novamente
+      version: 2,
+      onDowngrade: onDatabaseDowngradeDelete,
     );
   });
 }
