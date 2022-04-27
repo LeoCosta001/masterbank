@@ -2,6 +2,9 @@
 
 A new Flutter project.
 
+Using:
+- sqflite: To create local sql database.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
